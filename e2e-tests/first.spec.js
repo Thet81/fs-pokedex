@@ -1,3 +1,5 @@
+
+/* eslint-disable */
 const { test, describe, expect, beforeEach } = require('@playwright/test')
 
 describe('Pokedex', () => {
