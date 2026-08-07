@@ -111,6 +111,7 @@ footer {
   font-family: "Open Sans Condensed", "Open Sans";
   padding-top: 15px;
   text-transform: capitalize;
+  color: "tomato";
 }
 
 .pokemon-stats table {
