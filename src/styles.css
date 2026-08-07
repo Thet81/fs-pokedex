@@ -105,6 +105,7 @@ footer {
   flex-grow: 1;
   height: 100%;
   padding: 16px;
+  color : "skyblue";
 }
 
 .pokemon-stats {
