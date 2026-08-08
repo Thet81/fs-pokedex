@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-
   pull_request:
     branches : [main]
     types : [opened, synchronize]
@@ -13,35 +12,40 @@ jobs:
   simple_deployment_pipeline:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-
-      - name: Insall dependencies
+      - name: Install dependencies
         run : npm install
-
       - name: Check style
         run : npm run eslint
-
       - name: Run npm test
         run: npm run test
-
-      - name: rum npm build
+      - name: run npm build
         run: npm run build
   
   tag_release:
     needs: [simple_deployment_pipeline]
     if: ${{ github.event_name == 'push' }}
-    runs-on : ubuntu-latest
-    steps :
-      - name : Bump version and push tag
-        uses : anothrNick/github-tag-action@1.75.0
-        env : 
-          GITHUB_TOKEN : ${{secrets.GITHUB_TOKEN}}
+    runs-on: ubuntu-latest
+    # Grants permission to push the tag back to your repository
+    permissions:
+      contents: write 
+    steps:
+      # 1. Fetch full git history
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 
 
+      # 2. Prevent git directory ownership errors inside Docker
+      - name: Fix git safe directory
+        run: git config --global --add safe.directory /github/workspace
 
-
-
+      # 3. Tag the release
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.75.0
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
